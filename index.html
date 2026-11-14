@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -27,83 +27,195 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- App Authentication Pre-check (Password: TLSMG123) -->
+    <!-- Firebase Authentication & Session Layer -->
     <script>
-        const APP_AUTH_KEY = 'TLNOTE_AUTH_SESSION';
-        const APP_AUTH_PASS = 'TLSMG123';
+        var firebaseConfig = {
+            apiKey: "AIzaSyAcnJaPN6bH8V6pyJ8oJEeWTHgsRE4VirI",
+            authDomain: "tlsmgnote.firebaseapp.com",
+            projectId: "tlsmgnote",
+            storageBucket: "tlsmgnote.firebasestorage.app",
+            messagingSenderId: "1050442012701",
+            appId: "1:1050442012701:web:33789dd5db05b448cfcef4",
+            measurementId: "G-9MSVX51HJV"
+        };
+
+        var fbApp = null;
+        var fbAuth = null;
+        var fbDb = null;
+        if (typeof firebase !== 'undefined') {
+            try {
+                if (!firebase.apps || !firebase.apps.length) {
+                    fbApp = firebase.initializeApp(firebaseConfig);
+                } else {
+                    fbApp = firebase.app();
+                }
+                fbAuth = firebase.auth();
+                fbDb = firebase.firestore();
+            } catch (e) {
+                console.warn("Firebase Init:", e);
+            }
+        }
+
+        const APP_AUTH_KEY = 'TLNOTE_FIREBASE_AUTH_ACTIVE';
 
         function isAppAuthenticated() {
             try {
-                return sessionStorage.getItem(APP_AUTH_KEY) === 'true' || localStorage.getItem(APP_AUTH_KEY) === 'true';
+                if (fbAuth && fbAuth.currentUser) return true;
+                return sessionStorage.getItem(APP_AUTH_KEY) === 'true';
             } catch (e) {
                 return false;
             }
         }
 
-        // Apply authenticated class immediately if already authenticated to prevent flash
-        if (isAppAuthenticated()) {
-            document.documentElement.classList.add('is-authenticated');
+        function updateNavbarUserBadge(email) {
+            var badge = document.getElementById('navUserBadge');
+            var text = document.getElementById('navUserEmailText');
+            if (badge && text) {
+                if (email) {
+                    text.textContent = email;
+                    badge.style.display = 'inline-flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
         }
 
-        function handleAuthSubmit(e) {
+        // Auto listener for Firebase Auth state
+        if (fbAuth) {
+            fbAuth.onAuthStateChanged(function (user) {
+                var overlay = document.getElementById('authGateOverlay');
+                if (user) {
+                    sessionStorage.setItem(APP_AUTH_KEY, 'true');
+                    sessionStorage.setItem('TLNOTE_USER_EMAIL', user.email);
+                    document.documentElement.classList.add('is-authenticated');
+                    if (overlay) overlay.classList.add('hidden');
+                    updateNavbarUserBadge(user.email);
+                } else {
+                    sessionStorage.removeItem(APP_AUTH_KEY);
+                    sessionStorage.removeItem('TLNOTE_USER_EMAIL');
+                    localStorage.removeItem(APP_AUTH_KEY);
+                    localStorage.removeItem('TLNOTE_USER_EMAIL');
+                    document.documentElement.classList.remove('is-authenticated');
+                    if (overlay) overlay.classList.remove('hidden');
+                    updateNavbarUserBadge(null);
+                }
+            });
+        }
+
+        async function handleAuthSubmit(e) {
             if (e) e.preventDefault();
-            var input = document.getElementById('authPasswordInput');
+            var emailInp = document.getElementById('authEmailInput');
+            var pwdInp = document.getElementById('authPasswordInput');
             var errorMsg = document.getElementById('authErrorMsg');
+            var errorText = document.getElementById('authErrorText');
+            var btn = document.getElementById('btnAuthSubmit');
             var card = document.getElementById('authCard');
             var remember = document.getElementById('authRememberMe');
 
-            if (!input) return;
-            var val = (input.value || '').trim();
+            var email = (emailInp ? emailInp.value : '').trim();
+            var pwd = (pwdInp ? pwdInp.value : '').trim();
 
-            if (val === APP_AUTH_PASS) {
+            if (!email || !pwd) {
+                showAuthError('Ketik email terdaftar dan kata sandi.');
+                return;
+            }
+
+            if (!fbAuth) {
+                showAuthError('Layanan Firebase Authentication belum terhubung. Periksa koneksi internet.');
+                return;
+            }
+
+            var origBtnHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Memverifikasi Akun...</span>';
+            }
+
+            try {
+                if (remember && remember.checked) {
+                    await fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                } else {
+                    await fbAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+                }
+
+                var userCredential = await fbAuth.signInWithEmailAndPassword(email, pwd);
+                var user = userCredential.user;
+
                 if (errorMsg) errorMsg.style.display = 'none';
-                try {
-                    sessionStorage.setItem(APP_AUTH_KEY, 'true');
-                    if (remember && remember.checked) {
-                        localStorage.setItem(APP_AUTH_KEY, 'true');
-                    } else {
-                        localStorage.removeItem(APP_AUTH_KEY);
-                    }
-                } catch (err) {}
+                sessionStorage.setItem(APP_AUTH_KEY, 'true');
+                sessionStorage.setItem('TLNOTE_USER_EMAIL', user.email);
 
                 document.documentElement.classList.add('is-authenticated');
                 var overlay = document.getElementById('authGateOverlay');
                 if (overlay) overlay.classList.add('hidden');
+                updateNavbarUserBadge(user.email);
 
                 // Route to appropriate view
                 var initialHash = window.location.hash || '#dashboard';
-                if (initialHash === '#create') navigateTo('createView');
-                else if (initialHash === '#history') navigateTo('historyView');
-                else navigateTo('dashboardView');
-            } else {
-                if (errorMsg) errorMsg.style.display = 'flex';
-                if (card) {
-                    card.classList.remove('shake');
-                    void card.offsetWidth; // trigger reflow
-                    card.classList.add('shake');
+                if (typeof navigateTo === 'function') {
+                    if (initialHash === '#create') navigateTo('createView');
+                    else if (initialHash === '#history') navigateTo('historyView');
+                    else navigateTo('dashboardView');
                 }
-                input.value = '';
-                input.focus();
+            } catch (err) {
+                console.error("Firebase Login Error:", err);
+                var msg = 'Email tidak terdaftar atau kata sandi salah!';
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    msg = 'Akses Ditolak: Email belum terdaftar / diizinkan di Firebase Console.';
+                } else if (err.code === 'auth/wrong-password') {
+                    msg = 'Kata sandi salah. Silakan coba lagi.';
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = 'Format alamat email tidak valid.';
+                } else if (err.code === 'auth/too-many-requests') {
+                    msg = 'Terlalu banyak percobaan gagal. Silakan tunggu beberapa saat.';
+                }
+                showAuthError(msg);
+                if (pwdInp) {
+                    pwdInp.value = '';
+                    pwdInp.focus();
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origBtnHtml;
+                }
+            }
+        }
+
+        function showAuthError(msg) {
+            var errorMsg = document.getElementById('authErrorMsg');
+            var errorText = document.getElementById('authErrorText');
+            var card = document.getElementById('authCard');
+            if (errorText) errorText.textContent = msg;
+            if (errorMsg) errorMsg.style.display = 'flex';
+            if (card) {
+                card.classList.remove('shake');
+                void card.offsetWidth;
+                card.classList.add('shake');
             }
         }
 
         function handleLockApp() {
-            try {
-                sessionStorage.removeItem(APP_AUTH_KEY);
-                localStorage.removeItem(APP_AUTH_KEY);
-            } catch (e) {}
+            if (fbAuth) {
+                fbAuth.signOut().catch(function () {});
+            }
+            sessionStorage.removeItem(APP_AUTH_KEY);
+            sessionStorage.removeItem('TLNOTE_USER_EMAIL');
+            localStorage.removeItem(APP_AUTH_KEY);
+            localStorage.removeItem('TLNOTE_USER_EMAIL');
 
             document.documentElement.classList.remove('is-authenticated');
             var overlay = document.getElementById('authGateOverlay');
-            var input = document.getElementById('authPasswordInput');
+            var emailInp = document.getElementById('authEmailInput');
+            var pwdInp = document.getElementById('authPasswordInput');
             var errorMsg = document.getElementById('authErrorMsg');
 
             if (errorMsg) errorMsg.style.display = 'none';
-            if (input) input.value = '';
+            if (pwdInp) pwdInp.value = '';
             if (overlay) {
                 overlay.classList.remove('hidden');
                 setTimeout(function() {
-                    if (input) input.focus();
+                    if (emailInp) emailInp.focus();
                 }, 100);
             }
         }
@@ -123,8 +235,8 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             if (!isAppAuthenticated()) {
-                var input = document.getElementById('authPasswordInput');
-                if (input) input.focus();
+                var emailInp = document.getElementById('authEmailInput');
+                if (emailInp) emailInp.focus();
             }
         });
 
@@ -132,8 +244,8 @@
             if (!isAppAuthenticated()) {
                 var overlay = document.getElementById('authGateOverlay');
                 if (overlay) overlay.classList.remove('hidden');
-                var input = document.getElementById('authPasswordInput');
-                if (input) input.focus();
+                var emailInp = document.getElementById('authEmailInput');
+                if (emailInp) emailInp.focus();
                 return;
             }
 
@@ -178,7 +290,7 @@
 <body>
 
     <!-- ====================================================================
-         AUTHENTICATION GATE OVERLAY (Password Protected: TLSMG123)
+         AUTHENTICATION GATE OVERLAY (Firebase Authentication)
          ==================================================================== -->
     <div id="authGateOverlay" class="auth-gate-overlay">
         <div class="auth-card" id="authCard">
@@ -186,16 +298,26 @@
                 <img src="favicon.png" alt="NT Logo" class="auth-logo-img">
             </div>
             <h2 class="auth-title">Minutes of Meeting</h2>
-            <p class="auth-subtitle">Masukkan kata sandi untuk melanjutkan</p>
+            <p class="auth-subtitle">Masuk dengan email resmi yang terdaftar</p>
 
             <form id="authGateForm" class="auth-form" onsubmit="handleAuthSubmit(event); return false;">
+                <div class="auth-field-wrap">
+                    <label for="authEmailInput" class="auth-label">
+                        <i class="fa-solid fa-envelope"></i> Email Terdaftar
+                    </label>
+                    <div class="auth-input-group">
+                        <i class="fa-solid fa-at auth-icon-left"></i>
+                        <input type="email" id="authEmailInput" class="auth-input" placeholder="contoh@gmail.com" autocomplete="email" required autofocus>
+                    </div>
+                </div>
+
                 <div class="auth-field-wrap">
                     <label for="authPasswordInput" class="auth-label">
                         <i class="fa-solid fa-key"></i> Kata Sandi
                     </label>
                     <div class="auth-input-group">
                         <i class="fa-solid fa-lock auth-icon-left"></i>
-                        <input type="password" id="authPasswordInput" class="auth-input" placeholder="Masukkan kata sandi..." autocomplete="current-password" required autofocus>
+                        <input type="password" id="authPasswordInput" class="auth-input" placeholder="Masukkan kata sandi..." autocomplete="current-password" required>
                         <button type="button" class="auth-toggle-pwd" id="authTogglePwdBtn" title="Tampilkan/Sembunyikan Kata Sandi" onclick="toggleAuthPasswordVisibility()">
                             <i class="fa-solid fa-eye" id="authEyeIcon"></i>
                         </button>
@@ -204,19 +326,19 @@
 
                 <div id="authErrorMsg" class="auth-error-alert" style="display: none;">
                     <i class="fa-solid fa-circle-exclamation"></i>
-                    <span>Kata sandi salah! Silakan coba lagi.</span>
+                    <span id="authErrorText">Email atau kata sandi salah!</span>
                 </div>
 
                 <div class="auth-options">
                     <label class="auth-checkbox-label">
                         <input type="checkbox" id="authRememberMe" checked>
-                        <span>Ingat di perangkat ini</span>
+                        <span>Ingat saya di perangkat ini</span>
                     </label>
                 </div>
 
                 <button type="submit" class="btn-auth-submit" id="btnAuthSubmit">
-                    <i class="fa-solid fa-unlock-keyhole"></i>
-                    <span>Buka Aplikasi</span>
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Masuk ke Notulensi</span>
                 </button>
             </form>
         </div>
@@ -265,10 +387,16 @@
                     <span id="statusText">Firestore Terhubung</span>
                 </div>
 
-                <!-- Lock App Button -->
-                <button type="button" class="btn-nav-lock" id="btnNavLock" title="Kunci Aplikasi" onclick="handleLockApp()">
-                    <i class="fa-solid fa-lock"></i>
-                    <span>Kunci</span>
+                <!-- User Info Badge -->
+                <div class="nav-user-badge" id="navUserBadge" style="display: none; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-secondary); background: #F1F5F9; padding: 4px 10px; border-radius: 20px; border: 1px solid #E2E8F0;">
+                    <i class="fa-solid fa-circle-user" style="color: var(--primary);"></i>
+                    <span id="navUserEmailText" style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">-</span>
+                </div>
+
+                <!-- Lock/Logout App Button -->
+                <button type="button" class="btn-nav-lock" id="btnNavLock" title="Keluar / Kunci Aplikasi" onclick="handleLockApp()">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Keluar</span>
                 </button>
 
                 <!-- Mobile Menu Button -->
@@ -2662,11 +2790,6 @@
             if (!fbDb) return;
 
             try {
-                if (fbAuth && !fbAuth.currentUser) {
-                    await fbAuth.signInWithEmailAndPassword("admin@kabinnet.com", "Smg1234").catch(function() {
-                        return fbAuth.signInAnonymously().catch(function() {});
-                    });
-                }
                 await fbDb.collection("app").doc("notulensiData").set({
                     jsonData: JSON.stringify(list),
                     totalRecords: list.length,
@@ -4405,12 +4528,6 @@
             if (fbDb) {
                 var dot = document.getElementById('statusDot');
                 var text = document.getElementById('statusText');
-
-                if (fbAuth) {
-                    fbAuth.signInWithEmailAndPassword("admin@kabinnet.com", "Smg1234").catch(function() {
-                        return fbAuth.signInAnonymously().catch(function() {});
-                    });
-                }
 
                 try {
                     fbDb.collection("app").doc("notulensiData").onSnapshot(function (docSnap) {
