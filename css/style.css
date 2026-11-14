@@ -2502,3 +2502,78 @@ html.is-authenticated #authGateOverlay {
     margin: 2px 0;
 }
 
+/* ==========================================================================
+   PEMBAHASAN ROW-BASED CARDS IN FORMULIR (Form Baris - Output Kolom)
+   ========================================================================== */
+.pembahasan-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.pembahasan-row-card {
+    background-color: #FFFFFF;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md, 10px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.pembahasan-row-card:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pembahasan-row-card:focus-within {
+    border-color: rgba(10, 102, 255, 0.45);
+}
+
+.pembahasan-row-card-header {
+    background-color: #F8FAFC;
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pembahasan-badge-no {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pembahasan-row-card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.pembahasan-field-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.pembahasan-field-row .form-label {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pembahasan-field-row .rich-editor {
+    width: 100%;
+}
+
+

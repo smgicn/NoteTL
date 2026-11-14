@@ -606,8 +606,8 @@
                     <div class="peserta-manage-card" style="margin-bottom: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
                             <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-table-list" style="color: var(--primary);"></i>
-                                <span>Kolom Poin Pembahasan &amp; Tindak Lanjut Top Management:</span>
+                                <i class="fa-solid fa-list-check" style="color: var(--primary);"></i>
+                                <span>Poin Pembahasan &amp; Tindak Lanjut Top Management:</span>
                             </div>
                             <div style="display: flex; gap: 8px; align-items: center;">
                                 <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddPembahasanRow">
@@ -660,22 +660,10 @@
                             </div>
                         </div>
 
-                        <div class="peserta-table-wrap" style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px; background: white;">
-                            <table class="peserta-table" id="pembahasanTable" style="width: 100%; min-width: 860px; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background-color: #F8FAFC;">
-                                        <th style="width: 45px; text-align: center;">No.</th>
-                                        <th style="width: 22%;">Pembahasan <span class="required-mark">*</span></th>
-                                        <th style="width: 26%;">Deskripsi <span class="required-mark">*</span></th>
-                                        <th style="width: 24%;">Hasil <span class="required-mark">*</span></th>
-                                        <th style="width: 24%;">Tindak Lanjut Top Management <span class="required-mark">*</span></th>
-                                        <th style="width: 50px; text-align: center;">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="pembahasanTableBody">
-                                    <!-- Dynamic rows -->
-                                </tbody>
-                            </table>
+                        <div id="pembahasanTable">
+                            <div id="pembahasanTableBody" class="pembahasan-cards-container">
+                                <!-- Dynamic row cards -->
+                            </div>
                         </div>
                         <div style="margin-top: 10px; display: flex; justify-content: flex-start; align-items: center;">
                             <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddPembahasanRowBottom">
@@ -1070,7 +1058,7 @@
                     <div class="peserta-manage-card" style="margin-bottom: 16px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
                             <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">
-                                Kolom Poin Pembahasan &amp; Tindak Lanjut:
+                                Poin Pembahasan &amp; Tindak Lanjut:
                             </span>
                             <div style="display: flex; gap: 8px; align-items: center;">
                                 <button type="button" class="btn btn-sm btn-outline-primary" id="btnEditAddPembahasanRow">
@@ -1123,22 +1111,10 @@
                             </div>
                         </div>
 
-                        <div class="peserta-table-wrap" style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px; background: white;">
-                            <table class="peserta-table" id="editPembahasanTable" style="width: 100%; min-width: 860px; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background-color: #F8FAFC;">
-                                        <th style="width: 45px; text-align: center;">No.</th>
-                                        <th style="width: 22%;">Pembahasan <span class="required-mark">*</span></th>
-                                        <th style="width: 26%;">Deskripsi <span class="required-mark">*</span></th>
-                                        <th style="width: 24%;">Hasil <span class="required-mark">*</span></th>
-                                        <th style="width: 24%;">Tindak Lanjut Top Management <span class="required-mark">*</span></th>
-                                        <th style="width: 50px; text-align: center;">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="editPembahasanTableBody">
-                                    <!-- Dynamic edit rows -->
-                                </tbody>
-                            </table>
+                        <div id="editPembahasanTable">
+                            <div id="editPembahasanTableBody" class="pembahasan-cards-container">
+                                <!-- Dynamic edit row cards -->
+                            </div>
                         </div>
                         <div style="margin-top: 8px;">
                             <button type="button" class="btn btn-sm btn-outline-primary" id="btnEditAddPembahasanRowBottom">
@@ -2113,14 +2089,14 @@
         function syncPembahasanDraftFromDom(tbodyId, isEdit) {
             var tbody = document.getElementById(tbodyId);
             if (!tbody) return;
-            var rows = tbody.querySelectorAll('tr[data-row-idx]');
+            var rows = tbody.querySelectorAll('[data-row-idx]');
             var draft = isEdit ? state.editPembahasanDraft : state.pembahasanDraft;
             for (var i = 0; i < rows.length; i++) {
-                var tr = rows[i];
-                var p = getEditorHtml(tr.querySelector('.inp-pembahasan'));
-                var d = getEditorHtml(tr.querySelector('.inp-deskripsi'));
-                var h = getEditorHtml(tr.querySelector('.inp-hasil'));
-                var tl = getEditorHtml(tr.querySelector('.inp-tindaklanjut'));
+                var card = rows[i];
+                var p = getEditorHtml(card.querySelector('.inp-pembahasan'));
+                var d = getEditorHtml(card.querySelector('.inp-deskripsi'));
+                var h = getEditorHtml(card.querySelector('.inp-hasil'));
+                var tl = getEditorHtml(card.querySelector('.inp-tindaklanjut'));
                 if (!draft[i]) {
                     draft[i] = { nomor: i + 1 };
                 }
@@ -2148,28 +2124,61 @@
             }
 
             tbody.innerHTML = list.map(function (row, idx) {
-                return '<tr data-row-idx="' + idx + '">' +
-                    '<td style="text-align: center; font-weight: 700; vertical-align: top; padding: 10px 4px; color: var(--text-secondary);">' +
-                        (idx + 1) + '.' +
-                    '</td>' +
-                    '<td style="vertical-align: top; padding: 6px;">' +
-                        '<div class="form-control rich-editor inp-pembahasan" contenteditable="true" data-placeholder="Poin / pokok pembahasan...">' + prepareEditorHtml(row.pembahasan || '') + '</div>' +
-                    '</td>' +
-                    '<td style="vertical-align: top; padding: 6px;">' +
-                        '<div class="form-control rich-editor inp-deskripsi" contenteditable="true" data-placeholder="Deskripsi pembahasan...">' + prepareEditorHtml(row.deskripsi || '') + '</div>' +
-                    '</td>' +
-                    '<td style="vertical-align: top; padding: 6px;">' +
-                        '<div class="form-control rich-editor inp-hasil" contenteditable="true" data-placeholder="Hasil pembahasan...">' + prepareEditorHtml(row.hasil || '') + '</div>' +
-                    '</td>' +
-                    '<td style="vertical-align: top; padding: 6px;">' +
-                        '<div class="form-control rich-editor inp-tindaklanjut" contenteditable="true" data-placeholder="Tindak lanjut top management...">' + prepareEditorHtml(row.tindakLanjut || '') + '</div>' +
-                    '</td>' +
-                    '<td style="text-align: center; vertical-align: top; padding: 10px 4px;">' +
-                        '<button type="button" class="btn-icon btn-icon-danger btn-del-pembahasan-row" data-row-idx="' + idx + '" data-is-edit="' + (isEdit ? 'true' : 'false') + '" title="Hapus baris ini">' +
-                            '<i class="fa-solid fa-trash-can"></i>' +
-                        '</button>' +
-                    '</td>' +
-                '</tr>';
+                var itemNo = idx + 1;
+                return '<div class="pembahasan-row-card" data-row-idx="' + idx + '">' +
+                    '<div class="pembahasan-row-card-header">' +
+                        '<div class="pembahasan-badge-no">' +
+                            '<i class="fa-solid fa-list-check" style="color: var(--primary);"></i>' +
+                            '<span>Poin Pembahasan #' + itemNo + '</span>' +
+                        '</div>' +
+                        '<div class="pembahasan-row-card-actions">' +
+                            '<button type="button" class="btn btn-sm btn-outline-danger btn-del-pembahasan-row" data-row-idx="' + idx + '" data-is-edit="' + (isEdit ? 'true' : 'false') + '" title="Hapus baris poin pembahasan ini" style="padding: 4px 10px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">' +
+                                '<i class="fa-solid fa-trash-can"></i> <span>Hapus Baris</span>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="pembahasan-row-card-body">' +
+                        '<!-- Baris 1: Pembahasan -->' +
+                        '<div class="pembahasan-field-row">' +
+                            '<label class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: inline-flex; align-items: center; gap: 6px;">' +
+                                '<i class="fa-solid fa-heading" style="color: var(--primary);"></i>' +
+                                '<span>Pembahasan</span>' +
+                                '<span class="required-mark">*</span>' +
+                            '</label>' +
+                            '<div class="form-control rich-editor inp-pembahasan" contenteditable="true" data-placeholder="Ketik poin / topik pokok pembahasan..." style="min-height: 52px;">' + prepareEditorHtml(row.pembahasan || '') + '</div>' +
+                        '</div>' +
+
+                        '<!-- Baris 2: Deskripsi -->' +
+                        '<div class="pembahasan-field-row">' +
+                            '<label class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: inline-flex; align-items: center; gap: 6px;">' +
+                                '<i class="fa-solid fa-align-left" style="color: var(--primary);"></i>' +
+                                '<span>Deskripsi</span>' +
+                                '<span class="required-mark">*</span>' +
+                            '</label>' +
+                            '<div class="form-control rich-editor inp-deskripsi" contenteditable="true" data-placeholder="Ketik uraian detail deskripsi pembahasan..." style="min-height: 72px;">' + prepareEditorHtml(row.deskripsi || '') + '</div>' +
+                        '</div>' +
+
+                        '<!-- Baris 3: Hasil -->' +
+                        '<div class="pembahasan-field-row">' +
+                            '<label class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: inline-flex; align-items: center; gap: 6px;">' +
+                                '<i class="fa-solid fa-square-check" style="color: var(--primary);"></i>' +
+                                '<span>Hasil</span>' +
+                                '<span class="required-mark">*</span>' +
+                            '</label>' +
+                            '<div class="form-control rich-editor inp-hasil" contenteditable="true" data-placeholder="Ketik hasil keputusan atau hasil pembahasan rapat..." style="min-height: 52px;">' + prepareEditorHtml(row.hasil || '') + '</div>' +
+                        '</div>' +
+
+                        '<!-- Baris 4: Tindak Lanjut Top Management -->' +
+                        '<div class="pembahasan-field-row">' +
+                            '<label class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: inline-flex; align-items: center; gap: 6px;">' +
+                                '<i class="fa-solid fa-user-tie" style="color: var(--primary);"></i>' +
+                                '<span>Tindak Lanjut Top Management</span>' +
+                                '<span class="required-mark">*</span>' +
+                            '</label>' +
+                            '<div class="form-control rich-editor inp-tindaklanjut" contenteditable="true" data-placeholder="Ketik rencana tindak lanjut arahan Top Management..." style="min-height: 52px;">' + prepareEditorHtml(row.tindakLanjut || '') + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
             }).join('');
 
             var editors = tbody.querySelectorAll('.rich-editor');
@@ -2251,14 +2260,14 @@
         function getPembahasanFromTable(tbodyId) {
             var tbody = document.getElementById(tbodyId);
             if (!tbody) return [];
-            var rows = tbody.querySelectorAll('tr[data-row-idx]');
+            var rows = tbody.querySelectorAll('[data-row-idx]');
             var list = [];
             for (var i = 0; i < rows.length; i++) {
-                var tr = rows[i];
-                var p = getEditorHtml(tr.querySelector('.inp-pembahasan'));
-                var d = getEditorHtml(tr.querySelector('.inp-deskripsi'));
-                var h = getEditorHtml(tr.querySelector('.inp-hasil'));
-                var tl = getEditorHtml(tr.querySelector('.inp-tindaklanjut'));
+                var card = rows[i];
+                var p = getEditorHtml(card.querySelector('.inp-pembahasan'));
+                var d = getEditorHtml(card.querySelector('.inp-deskripsi'));
+                var h = getEditorHtml(card.querySelector('.inp-hasil'));
+                var tl = getEditorHtml(card.querySelector('.inp-tindaklanjut'));
 
                 if (stripHtml(p).trim() || stripHtml(d).trim() || stripHtml(h).trim() || stripHtml(tl).trim()) {
                     list.push({
@@ -2624,19 +2633,19 @@
                 for (var i = 0; i < data.pembahasanList.length; i++) {
                     var row = data.pembahasanList[i];
                     if (!stripHtml(row.pembahasan)) {
-                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Pembahasan tidak boleh kosong.' });
+                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Pembahasan tidak boleh kosong.' });
                         break;
                     }
                     if (!stripHtml(row.deskripsi)) {
-                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Deskripsi tidak boleh kosong.' });
+                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Deskripsi tidak boleh kosong.' });
                         break;
                     }
                     if (!stripHtml(row.hasil)) {
-                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Hasil tidak boleh kosong.' });
+                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Hasil tidak boleh kosong.' });
                         break;
                     }
                     if (!stripHtml(row.tindakLanjut)) {
-                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Tindak Lanjut Top Management tidak boleh kosong.' });
+                        errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Tindak Lanjut Top Management tidak boleh kosong.' });
                         break;
                     }
                 }
@@ -3653,13 +3662,13 @@
 
             var editPembahasan = getPembahasanFromTable('editPembahasanTableBody');
             if (editPembahasan.length === 0) {
-                showToast('Tabel pembahasan minimal harus memiliki 1 baris yang terisi.', 'warning', 'Validasi Gagal');
+                showToast('Poin pembahasan minimal harus memiliki 1 baris yang terisi.', 'warning', 'Validasi Gagal');
                 return;
             }
             for (var p = 0; p < editPembahasan.length; p++) {
                 var er = editPembahasan[p];
                 if (!stripHtml(er.pembahasan) || !stripHtml(er.deskripsi) || !stripHtml(er.hasil) || !stripHtml(er.tindakLanjut)) {
-                    showToast('Pastikan kolom Pembahasan, Deskripsi, Hasil, dan Tindak Lanjut Top Management pada baris ' + (p + 1) + ' terisi.', 'warning', 'Validasi Gagal');
+                    showToast('Pastikan Pembahasan, Deskripsi, Hasil, dan Tindak Lanjut Top Management pada baris poin ' + (p + 1) + ' terisi.', 'warning', 'Validasi Gagal');
                     return;
                 }
             }
