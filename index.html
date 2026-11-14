@@ -551,30 +551,9 @@
                             </div>
                             <div style="display: flex; gap: 8px;">
                                 <select id="pesertaPresetSelect" class="form-control" style="background-color: white; flex: 1;">
-                                    <option value="">-- Memuat Mentahan Dropdown... --</option>
+                                    <option value="">-- Pilih Peserta dari Mentahan... --</option>
                                 </select>
-                                <button type="button" class="btn btn-sm btn-outline-danger" id="btnDeleteSelectedPreset" title="Hapus nama yang sedang dipilih dari Mentahan Dropdown" style="white-space: nowrap; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px;">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                    <span>Hapus dari Dropdown</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Manual Input Row dengan tombol Simpan ke Dropdown -->
-                        <div style="display: grid; grid-template-columns: 2fr 1.5fr auto; gap: 10px; margin-bottom: 12px;" class="peserta-input-grid">
-                            <div>
-                                <label class="form-label" style="font-size: 0.8rem; margin-bottom: 4px;">Nama Lengkap Peserta</label>
-                                <div class="input-with-icon">
-                                    <i class="fa-solid fa-user-plus"></i>
-                                    <input type="text" id="participantNameInput" class="form-control" placeholder="Ketik nama peserta...">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="form-label" style="font-size: 0.8rem; margin-bottom: 4px;">Jabatan / Peran</label>
-                                <input type="text" id="participantRoleInput" class="form-control" placeholder="Contoh: (Team Leader)">
-                            </div>
-                            <div style="display: flex; align-items: flex-end;">
-                                <button type="button" class="btn btn-primary" id="addParticipantBtn" style="height: 46px; white-space: nowrap;">
+                                <button type="button" class="btn btn-primary" id="addParticipantBtn" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
                                     <i class="fa-solid fa-plus"></i>
                                     <span>Tambah ke Rapat</span>
                                 </button>
@@ -1051,16 +1030,10 @@
                                 <select id="editPesertaPresetSelect" class="form-control" style="background: white; flex: 1;">
                                     <option value="">-- Pilih dari Mentahan Dropdown --</option>
                                 </select>
-                                <button type="button" class="btn btn-sm btn-outline-danger" id="btnEditDeleteSelectedPreset" title="Hapus nama yang dipilih dari Mentahan Dropdown" style="white-space: nowrap; padding: 0 10px; font-size: 0.8rem;">
-                                    <i class="fa-solid fa-trash-can"></i> Hapus dari Dropdown
+                                <button type="button" class="btn btn-primary" id="editAddParticipantBtn" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Tambah ke Rapat</span>
                                 </button>
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 2fr 1.5fr auto; gap: 10px; margin-bottom: 10px;" class="peserta-input-grid">
-                            <input type="text" id="editParticipantNameInput" class="form-control" placeholder="Nama peserta...">
-                            <input type="text" id="editParticipantRoleInput" class="form-control" placeholder="Jabatan / Peran...">
-                            <div style="display: flex; align-items: flex-end;">
-                                <button type="button" class="btn btn-primary" id="editAddParticipantBtn" style="white-space: nowrap;">Tambah</button>
                             </div>
                         </div>
                         <div class="quick-helper-row" style="margin-bottom: 10px; gap: 6px;">
@@ -2643,7 +2616,7 @@
             if (!data.lokasi) errors.push({ fieldId: 'lokasi', message: 'Lokasi rapat wajib diisi manual.' });
             if (!data.pemimpinRapat) errors.push({ fieldId: 'pemimpinRapat', message: 'Pemimpin Rapat wajib diisi manual.' });
             if (!data.notulen) errors.push({ fieldId: 'notulen', message: 'Notulen rapat wajib diisi manual.' });
-            if (!data.peserta || data.peserta.length === 0) errors.push({ fieldId: 'participantNameInput', message: 'Minimal 1 peserta rapat wajib ditambahkan.' });
+            if (!data.peserta || data.peserta.length === 0) errors.push({ fieldId: 'pesertaPresetSelect', message: 'Minimal 1 peserta rapat wajib ditambahkan.' });
 
             if (!data.pembahasanList || data.pembahasanList.length === 0) {
                 errors.push({ fieldId: 'pembahasanTable', message: 'Tabel pembahasan minimal harus memiliki 1 baris yang terisi.' });
@@ -3652,10 +3625,6 @@
 
             var epSelect = document.getElementById('editPesertaPresetSelect');
             if (epSelect) epSelect.value = '';
-            var epName = document.getElementById('editParticipantNameInput');
-            if (epName) epName.value = '';
-            var epRole = document.getElementById('editParticipantRoleInput');
-            if (epRole) epRole.value = '';
 
             // Render foto di edit modal
             state.editFotoDraft = Array.isArray(item.fotoDokumentasi) ? item.fotoDokumentasi.map(function(f){
@@ -3950,36 +3919,43 @@
                 });
             }
 
-            // Peserta: Dropdown Mentahan (Form Utama)
+            // Peserta: Dropdown Mentahan Langsung ke Tabel Rapat
             var pSelect = document.getElementById('pesertaPresetSelect');
-            var pNameInp = document.getElementById('participantNameInput');
-            var pRoleInp = document.getElementById('participantRoleInput');
             var pAddBtn = document.getElementById('addParticipantBtn');
+
+            function addSelectedPresetToDraft(isEdit) {
+                var sel = isEdit ? document.getElementById('editPesertaPresetSelect') : document.getElementById('pesertaPresetSelect');
+                if (!sel || !sel.value) {
+                    showToast('Pilih peserta dari mentahan dropdown terlebih dahulu.', 'warning');
+                    if (sel) sel.focus();
+                    return;
+                }
+                var parts = sel.value.split('|');
+                var n = (parts[0] || '').trim();
+                var r = (parts[1] || '').trim();
+                if (!n) {
+                    showToast('Data peserta tidak valid.', 'warning');
+                    return;
+                }
+                if (isEdit) {
+                    addPesertaToDraft(n, r, state.editParticipantsDraft, 'editPesertaTableBody', 'editParticipantCountBadge', true);
+                } else {
+                    addPesertaToDraft(n, r, state.participantsDraft, 'pesertaTableBody', 'participantCountBadge', false);
+                }
+                sel.value = '';
+            }
 
             if (pSelect) {
                 pSelect.addEventListener('change', function () {
-                    var val = pSelect.value;
-                    if (!val) return;
-                    var parts = val.split('|');
-                    if (pNameInp) pNameInp.value = parts[0] || '';
-                    if (pRoleInp) pRoleInp.value = parts[1] || '';
+                    if (pSelect.value) {
+                        addSelectedPresetToDraft(false);
+                    }
                 });
             }
 
             if (pAddBtn) {
                 pAddBtn.addEventListener('click', function () {
-                    var n = pNameInp ? pNameInp.value : '';
-                    var r = pRoleInp ? pRoleInp.value : '';
-                    if (!n) {
-                        showToast('Ketik nama peserta terlebih dahulu.', 'warning');
-                        if (pNameInp) pNameInp.focus();
-                        return;
-                    }
-                    addPesertaToDraft(n, r, state.participantsDraft, 'pesertaTableBody', 'participantCountBadge', false);
-                    if (pNameInp) pNameInp.value = '';
-                    if (pRoleInp) pRoleInp.value = '';
-                    if (pSelect) pSelect.value = '';
-                    if (pNameInp) pNameInp.focus();
+                    addSelectedPresetToDraft(false);
                 });
             }
 
@@ -3988,21 +3964,6 @@
             if (btnLoadMM) {
                 btnLoadMM.addEventListener('click', function () {
                     loadAllPresetsToDraft(false);
-                });
-            }
-
-            // Hapus nama terpilih langsung dari dropdown (Form Utama)
-            var btnDelSelectedPreset = document.getElementById('btnDeleteSelectedPreset');
-            if (btnDelSelectedPreset) {
-                btnDelSelectedPreset.addEventListener('click', function () {
-                    var val = pSelect ? pSelect.value : '';
-                    if (!val) {
-                        showToast('Pilih nama peserta dari dropdown terlebih dahulu untuk dihapus.', 'warning');
-                        if (pSelect) pSelect.focus();
-                        return;
-                    }
-                    var parts = val.split('|');
-                    deletePresetParticipant(parts[0]);
                 });
             }
 
@@ -4020,29 +3981,19 @@
 
             // Peserta: Edit Modal Handlers
             var epSelect = document.getElementById('editPesertaPresetSelect');
-            var epNameInp = document.getElementById('editParticipantNameInput');
-            var epRoleInp = document.getElementById('editParticipantRoleInput');
             var epAddBtn = document.getElementById('editAddParticipantBtn');
 
             if (epSelect) {
                 epSelect.addEventListener('change', function () {
-                    var val = epSelect.value;
-                    if (!val) return;
-                    var parts = val.split('|');
-                    if (epNameInp) epNameInp.value = parts[0] || '';
-                    if (epRoleInp) epRoleInp.value = parts[1] || '';
+                    if (epSelect.value) {
+                        addSelectedPresetToDraft(true);
+                    }
                 });
             }
 
             if (epAddBtn) {
                 epAddBtn.addEventListener('click', function () {
-                    var n = epNameInp ? epNameInp.value : '';
-                    var r = epRoleInp ? epRoleInp.value : '';
-                    if (!n) return;
-                    addPesertaToDraft(n, r, state.editParticipantsDraft, 'editPesertaTableBody', 'editParticipantCountBadge', true);
-                    if (epNameInp) epNameInp.value = '';
-                    if (epRoleInp) epRoleInp.value = '';
-                    if (epSelect) epSelect.value = '';
+                    addSelectedPresetToDraft(true);
                 });
             }
 
@@ -4051,21 +4002,6 @@
             if (btnEditLoadMM) {
                 btnEditLoadMM.addEventListener('click', function () {
                     loadAllPresetsToDraft(true);
-                });
-            }
-
-            // Hapus nama terpilih langsung dari dropdown (Edit Modal)
-            var btnEditDelSelectedPreset = document.getElementById('btnEditDeleteSelectedPreset');
-            if (btnEditDelSelectedPreset) {
-                btnEditDelSelectedPreset.addEventListener('click', function () {
-                    var val = epSelect ? epSelect.value : '';
-                    if (!val) {
-                        showToast('Pilih nama peserta dari dropdown terlebih dahulu untuk dihapus.', 'warning');
-                        if (epSelect) epSelect.focus();
-                        return;
-                    }
-                    var parts = val.split('|');
-                    deletePresetParticipant(parts[0]);
                 });
             }
 
@@ -4080,6 +4016,7 @@
                     }
                 });
             }
+
 
             // Modal Kelola Mentahan Dropdown Trigger & Actions
             var btnOpenManageModal = document.getElementById('btnOpenManagePresetsModal');
