@@ -573,14 +573,10 @@
                                 <label class="form-label" style="font-size: 0.8rem; margin-bottom: 4px;">Jabatan / Peran</label>
                                 <input type="text" id="participantRoleInput" class="form-control" placeholder="Contoh: (Team Leader)">
                             </div>
-                            <div style="display: flex; gap: 8px; align-items: flex-end;">
+                            <div style="display: flex; align-items: flex-end;">
                                 <button type="button" class="btn btn-primary" id="addParticipantBtn" style="height: 46px; white-space: nowrap;">
                                     <i class="fa-solid fa-plus"></i>
                                     <span>Tambah ke Rapat</span>
-                                </button>
-                                <button type="button" class="btn btn-outline-success" id="btnSavePresetFromInput" title="Simpan nama & jabatan ini ke dalam Mentahan Dropdown agar selalu tersedia" style="height: 46px; white-space: nowrap;">
-                                    <i class="fa-solid fa-star"></i>
-                                    <span>+ Simpan ke Dropdown</span>
                                 </button>
                             </div>
                         </div>
@@ -1063,11 +1059,8 @@
                         <div style="display: grid; grid-template-columns: 2fr 1.5fr auto; gap: 10px; margin-bottom: 10px;" class="peserta-input-grid">
                             <input type="text" id="editParticipantNameInput" class="form-control" placeholder="Nama peserta...">
                             <input type="text" id="editParticipantRoleInput" class="form-control" placeholder="Jabatan / Peran...">
-                            <div style="display: flex; gap: 6px;">
+                            <div style="display: flex; align-items: flex-end;">
                                 <button type="button" class="btn btn-primary" id="editAddParticipantBtn" style="white-space: nowrap;">Tambah</button>
-                                <button type="button" class="btn btn-outline-success" id="btnEditSavePresetFromInput" title="Simpan ke Mentahan Dropdown" style="white-space: nowrap; padding: 0 10px;">
-                                    <i class="fa-solid fa-star"></i> Simpan ke Dropdown
-                                </button>
                             </div>
                         </div>
                         <div class="quick-helper-row" style="margin-bottom: 10px; gap: 6px;">
@@ -4013,21 +4006,6 @@
                 });
             }
 
-            // Simpan nama & jabatan dari input langsung ke mentahan dropdown (Form Utama)
-            var btnSavePresetInput = document.getElementById('btnSavePresetFromInput');
-            if (btnSavePresetInput) {
-                btnSavePresetInput.addEventListener('click', function () {
-                    var n = pNameInp ? pNameInp.value : '';
-                    var r = pRoleInp ? pRoleInp.value : '';
-                    if (!n) {
-                        showToast('Ketik nama peserta terlebih dahulu.', 'warning');
-                        if (pNameInp) pNameInp.focus();
-                        return;
-                    }
-                    addPresetParticipant(n, r);
-                });
-            }
-
             // Shortcut: Bersihkan Semua Peserta (Form Utama)
             var btnClearPeserta = document.getElementById('btnClearAllParticipants');
             if (btnClearPeserta) {
@@ -4088,21 +4066,6 @@
                     }
                     var parts = val.split('|');
                     deletePresetParticipant(parts[0]);
-                });
-            }
-
-            // Simpan nama & jabatan dari input langsung ke mentahan dropdown (Edit Modal)
-            var btnEditSavePresetInput = document.getElementById('btnEditSavePresetFromInput');
-            if (btnEditSavePresetInput) {
-                btnEditSavePresetInput.addEventListener('click', function () {
-                    var n = epNameInp ? epNameInp.value : '';
-                    var r = epRoleInp ? epRoleInp.value : '';
-                    if (!n) {
-                        showToast('Ketik nama peserta terlebih dahulu.', 'warning');
-                        if (epNameInp) epNameInp.focus();
-                        return;
-                    }
-                    addPresetParticipant(n, r);
                 });
             }
 
