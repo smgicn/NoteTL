@@ -644,6 +644,47 @@
                             </div>
                         </div>
 
+                        <!-- TOOLBAR FORMATTING: Bold, Italic, Underline, Rata Kanan Kiri & Warna -->
+                        <div class="pembahasan-rich-toolbar" data-target-table="pembahasanTable">
+                            <div class="rich-tool-group">
+                                <button type="button" class="rich-tool-btn" data-cmd="bold" title="Tebal (Bold)"><i class="fa-solid fa-bold"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="italic" title="Miring (Italic)"><i class="fa-solid fa-italic"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="underline" title="Garis Bawah (Underline)"><i class="fa-solid fa-underline"></i></button>
+                            </div>
+
+                            <div class="rich-tool-group">
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyLeft" title="Rata Kiri"><i class="fa-solid fa-align-left"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyCenter" title="Rata Tengah"><i class="fa-solid fa-align-center"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyRight" title="Rata Kanan"><i class="fa-solid fa-align-right"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyFull" title="Rata Kanan Kiri (Justify)"><i class="fa-solid fa-align-justify"></i></button>
+                            </div>
+
+                            <div class="rich-color-group">
+                                <span class="rich-color-label"><i class="fa-solid fa-font"></i> Warna:</span>
+                                <div class="rich-color-swatches">
+                                    <button type="button" class="rich-color-dot" data-color="#000000" style="background-color: #000000;" title="Hitam"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#0A66FF" style="background-color: #0A66FF;" title="Biru"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#DC2626" style="background-color: #DC2626;" title="Merah"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#16A34A" style="background-color: #16A34A;" title="Hijau"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#EA580C" style="background-color: #EA580C;" title="Oranye"></button>
+                                </div>
+                                <div class="rich-color-input-wrap" title="Pilih Warna Kustom">
+                                    <input type="color" class="rich-color-input" value="#0A66FF">
+                                </div>
+                            </div>
+
+                            <div class="rich-tool-group">
+                                <button type="button" class="rich-tool-btn" data-cmd="insertUnorderedList" title="Daftar Poin (Bullet List)"><i class="fa-solid fa-list-ul"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="insertOrderedList" title="Daftar Nomor (Numbered List)"><i class="fa-solid fa-list-ol"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="removeFormat" title="Hapus Format"><i class="fa-solid fa-text-slash"></i></button>
+                            </div>
+
+                            <div class="rich-toolbar-hint">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                                <span>Support Copy-Paste Word &amp; Excel</span>
+                            </div>
+                        </div>
+
                         <div class="peserta-table-wrap" style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px; background: white;">
                             <table class="peserta-table" id="pembahasanTable" style="width: 100%; min-width: 860px; border-collapse: collapse;">
                                 <thead>
@@ -1074,6 +1115,48 @@
                                 </span>
                             </div>
                         </div>
+
+                        <!-- TOOLBAR FORMATTING: Bold, Italic, Underline, Rata Kanan Kiri & Warna -->
+                        <div class="pembahasan-rich-toolbar" data-target-table="editPembahasanTable">
+                            <div class="rich-tool-group">
+                                <button type="button" class="rich-tool-btn" data-cmd="bold" title="Tebal (Bold)"><i class="fa-solid fa-bold"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="italic" title="Miring (Italic)"><i class="fa-solid fa-italic"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="underline" title="Garis Bawah (Underline)"><i class="fa-solid fa-underline"></i></button>
+                            </div>
+
+                            <div class="rich-tool-group">
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyLeft" title="Rata Kiri"><i class="fa-solid fa-align-left"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyCenter" title="Rata Tengah"><i class="fa-solid fa-align-center"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyRight" title="Rata Kanan"><i class="fa-solid fa-align-right"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="justifyFull" title="Rata Kanan Kiri (Justify)"><i class="fa-solid fa-align-justify"></i></button>
+                            </div>
+
+                            <div class="rich-color-group">
+                                <span class="rich-color-label"><i class="fa-solid fa-font"></i> Warna:</span>
+                                <div class="rich-color-swatches">
+                                    <button type="button" class="rich-color-dot" data-color="#000000" style="background-color: #000000;" title="Hitam"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#0A66FF" style="background-color: #0A66FF;" title="Biru"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#DC2626" style="background-color: #DC2626;" title="Merah"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#16A34A" style="background-color: #16A34A;" title="Hijau"></button>
+                                    <button type="button" class="rich-color-dot" data-color="#EA580C" style="background-color: #EA580C;" title="Oranye"></button>
+                                </div>
+                                <div class="rich-color-input-wrap" title="Pilih Warna Kustom">
+                                    <input type="color" class="rich-color-input" value="#0A66FF">
+                                </div>
+                            </div>
+
+                            <div class="rich-tool-group">
+                                <button type="button" class="rich-tool-btn" data-cmd="insertUnorderedList" title="Daftar Poin (Bullet List)"><i class="fa-solid fa-list-ul"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="insertOrderedList" title="Daftar Nomor (Numbered List)"><i class="fa-solid fa-list-ol"></i></button>
+                                <button type="button" class="rich-tool-btn" data-cmd="removeFormat" title="Hapus Format"><i class="fa-solid fa-text-slash"></i></button>
+                            </div>
+
+                            <div class="rich-toolbar-hint">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                                <span>Support Copy-Paste Word &amp; Excel</span>
+                            </div>
+                        </div>
+
                         <div class="peserta-table-wrap" style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px; background: white;">
                             <table class="peserta-table" id="editPembahasanTable" style="width: 100%; min-width: 860px; border-collapse: collapse;">
                                 <thead>
@@ -1791,6 +1874,276 @@
             }];
         }
 
+        // ==================================================================
+        // RICH TEXT UTILITIES & SANITIZATION (Bold, Italic, Underline, Align, Color, Copy-Paste)
+        // ==================================================================
+        var lastActiveRichEditor = null;
+        var lastSavedRange = null;
+
+        function saveCurrentSelection() {
+            var sel = window.getSelection();
+            if (sel && sel.rangeCount > 0) {
+                var range = sel.getRangeAt(0);
+                var container = range.commonAncestorContainer;
+                while (container && container.nodeType !== Node.ELEMENT_NODE) {
+                    container = container.parentNode;
+                }
+                if (container && container.closest('.rich-editor')) {
+                    lastActiveRichEditor = container.closest('.rich-editor');
+                    lastSavedRange = range.cloneRange();
+                }
+            }
+        }
+
+        function restoreCurrentSelection() {
+            if (lastSavedRange) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(lastSavedRange);
+            } else if (lastActiveRichEditor) {
+                lastActiveRichEditor.focus();
+            }
+        }
+
+        function stripHtml(html) {
+            if (!html) return '';
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return (tmp.textContent || tmp.innerText || '').trim();
+        }
+
+        function sanitizeRichHtml(html) {
+            if (!html) return '';
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(html, 'text/html');
+            var body = doc.body;
+
+            var allowedTags = [
+                'b', 'strong', 'i', 'em', 'u', 's', 'strike', 'del',
+                'span', 'p', 'div', 'br', 'ul', 'ol', 'li',
+                'table', 'thead', 'tbody', 'tr', 'th', 'td'
+            ];
+
+            function cleanNode(node) {
+                if (node.nodeType === Node.TEXT_NODE) return;
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    if (node.parentNode) node.parentNode.removeChild(node);
+                    return;
+                }
+
+                var tag = node.tagName.toLowerCase();
+                if (allowedTags.indexOf(tag) === -1) {
+                    while (node.firstChild) {
+                        node.parentNode.insertBefore(node.firstChild, node);
+                    }
+                    node.parentNode.removeChild(node);
+                    return;
+                }
+
+                // Preserve safe inline styles: color, text-align, font-weight, font-style, text-decoration
+                var style = node.getAttribute('style') || '';
+                var newStyles = [];
+                if (style) {
+                    var styleColor = node.style.color;
+                    if (styleColor && styleColor !== 'inherit' && styleColor !== 'initial') {
+                        newStyles.push('color: ' + styleColor);
+                    }
+                    var styleAlign = node.style.textAlign;
+                    if (styleAlign && ['left', 'center', 'right', 'justify'].indexOf(styleAlign) !== -1) {
+                        newStyles.push('text-align: ' + styleAlign);
+                    }
+                    var styleWeight = node.style.fontWeight;
+                    if (styleWeight === 'bold' || parseInt(styleWeight, 10) >= 600) {
+                        newStyles.push('font-weight: bold');
+                    }
+                    var styleStyle = node.style.fontStyle;
+                    if (styleStyle === 'italic') {
+                        newStyles.push('font-style: italic');
+                    }
+                    var styleDeco = node.style.textDecoration;
+                    if (styleDeco && styleDeco.indexOf('underline') !== -1) {
+                        newStyles.push('text-decoration: underline');
+                    }
+                }
+
+                while (node.attributes.length > 0) {
+                    node.removeAttribute(node.attributes[0].name);
+                }
+
+                if (newStyles.length > 0) {
+                    node.setAttribute('style', newStyles.join('; '));
+                }
+
+                var children = Array.from(node.childNodes);
+                for (var i = 0; i < children.length; i++) {
+                    cleanNode(children[i]);
+                }
+            }
+
+            var rootChildren = Array.from(body.childNodes);
+            for (var r = 0; r < rootChildren.length; r++) {
+                cleanNode(rootChildren[r]);
+            }
+
+            return body.innerHTML;
+        }
+
+        function cleanPastedHtml(html) {
+            if (!html) return '';
+            html = html.replace(/<!--[\s\S]*?-->/gi, '');
+            html = html.replace(/<style[\s\S]*?<\/style>/gi, '');
+            html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+            html = html.replace(/<meta[\s\S]*?>/gi, '');
+            html = html.replace(/<link[\s\S]*?>/gi, '');
+            html = html.replace(/<xml[\s\S]*?<\/xml>/gi, '');
+            html = html.replace(/<\/?o:[^>]*>/gi, '');
+            html = html.replace(/<\/?w:[^>]*>/gi, '');
+            html = html.replace(/<\/?m:[^>]*>/gi, '');
+            return sanitizeRichHtml(html);
+        }
+
+        function prepareEditorHtml(val) {
+            if (!val) return '';
+            if (/<[a-z][\s\S]*>/i.test(val)) {
+                return sanitizeRichHtml(val);
+            }
+            return escapeHtml(val).replace(/\r\n|\n|\r/g, '<br>');
+        }
+
+        function getEditorHtml(el) {
+            if (!el) return '';
+            var html = (el.innerHTML || '').trim();
+            if (html === '<br>' || html === '<div><br></div>' || html === '<p><br></p>' || !stripHtml(html).trim()) {
+                return '';
+            }
+            return sanitizeRichHtml(html);
+        }
+
+        function updateEditorEmptyState(el) {
+            if (!el) return;
+            var text = (el.textContent || '').trim();
+            if (!text && (!el.children.length || el.innerHTML === '<br>' || el.innerHTML === '<div><br></div>')) {
+                el.setAttribute('data-empty', 'true');
+            } else {
+                el.removeAttribute('data-empty');
+            }
+        }
+
+        function renderCellRichContent(content) {
+            if (!content || !content.trim()) return '-';
+            var val = content.trim();
+            if (/<[a-z][\s\S]*>/i.test(val)) {
+                return sanitizeRichHtml(val);
+            }
+            return escapeHtml(val).replace(/\r\n|\n|\r/g, '<br>');
+        }
+
+        function attachRichPasteHandler(ed, onChange) {
+            ed.addEventListener('paste', function(e) {
+                var clipboardData = e.clipboardData || window.clipboardData;
+                if (!clipboardData) return;
+                var html = clipboardData.getData('text/html');
+                var text = clipboardData.getData('text/plain');
+
+                e.preventDefault();
+                var insertContent = '';
+                if (html) {
+                    insertContent = cleanPastedHtml(html);
+                } else if (text) {
+                    insertContent = escapeHtml(text).replace(/\r\n|\n|\r/g, '<br>');
+                }
+
+                if (!insertContent) return;
+
+                if (document.queryCommandSupported && document.queryCommandSupported('insertHTML')) {
+                    document.execCommand('insertHTML', false, insertContent);
+                } else {
+                    var sel = window.getSelection();
+                    if (sel && sel.rangeCount > 0) {
+                        var range = sel.getRangeAt(0);
+                        range.deleteContents();
+                        var tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = insertContent;
+                        var frag = document.createDocumentFragment();
+                        var node, lastNode;
+                        while ((node = tempDiv.firstChild)) {
+                            lastNode = frag.appendChild(node);
+                        }
+                        range.insertNode(frag);
+                        if (lastNode) {
+                            range = range.cloneRange();
+                            range.setStartAfter(lastNode);
+                            range.collapse(true);
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                        }
+                    }
+                }
+
+                updateEditorEmptyState(ed);
+                saveCurrentSelection();
+                if (typeof onChange === 'function') onChange();
+            });
+        }
+
+        function execRichCommand(cmd, val, toolbar) {
+            if (!lastActiveRichEditor || !document.contains(lastActiveRichEditor)) {
+                var targetTableId = toolbar ? toolbar.getAttribute('data-target-table') : 'pembahasanTable';
+                var table = document.getElementById(targetTableId);
+                if (table) {
+                    lastActiveRichEditor = table.querySelector('.rich-editor');
+                    if (lastActiveRichEditor) lastActiveRichEditor.focus();
+                }
+            } else {
+                restoreCurrentSelection();
+            }
+
+            try {
+                document.execCommand(cmd, false, val);
+            } catch (err) {
+                console.warn('execRichCommand error:', err);
+            }
+
+            if (lastActiveRichEditor) {
+                lastActiveRichEditor.focus();
+                updateEditorEmptyState(lastActiveRichEditor);
+                saveCurrentSelection();
+                var evt = new Event('input', { bubbles: true });
+                lastActiveRichEditor.dispatchEvent(evt);
+            }
+        }
+
+        function setupRichTextToolbars() {
+            var toolbars = document.querySelectorAll('.pembahasan-rich-toolbar');
+            toolbars.forEach(function(toolbar) {
+                var buttons = toolbar.querySelectorAll('.rich-tool-btn');
+                buttons.forEach(function(btn) {
+                    btn.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        var cmd = btn.getAttribute('data-cmd');
+                        var val = btn.getAttribute('data-val') || null;
+                        execRichCommand(cmd, val, toolbar);
+                    });
+                });
+
+                var dots = toolbar.querySelectorAll('.rich-color-dot');
+                dots.forEach(function(dot) {
+                    dot.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        var color = dot.getAttribute('data-color');
+                        execRichCommand('foreColor', color, toolbar);
+                    });
+                });
+
+                var colorInput = toolbar.querySelector('.rich-color-input');
+                if (colorInput) {
+                    colorInput.addEventListener('input', function(e) {
+                        execRichCommand('foreColor', e.target.value, toolbar);
+                    });
+                }
+            });
+        }
+
         function syncPembahasanDraftFromDom(tbodyId, isEdit) {
             var tbody = document.getElementById(tbodyId);
             if (!tbody) return;
@@ -1798,10 +2151,10 @@
             var draft = isEdit ? state.editPembahasanDraft : state.pembahasanDraft;
             for (var i = 0; i < rows.length; i++) {
                 var tr = rows[i];
-                var p = (tr.querySelector('.inp-pembahasan') || {}).value || '';
-                var d = (tr.querySelector('.inp-deskripsi') || {}).value || '';
-                var h = (tr.querySelector('.inp-hasil') || {}).value || '';
-                var tl = (tr.querySelector('.inp-tindaklanjut') || {}).value || '';
+                var p = getEditorHtml(tr.querySelector('.inp-pembahasan'));
+                var d = getEditorHtml(tr.querySelector('.inp-deskripsi'));
+                var h = getEditorHtml(tr.querySelector('.inp-hasil'));
+                var tl = getEditorHtml(tr.querySelector('.inp-tindaklanjut'));
                 if (!draft[i]) {
                     draft[i] = { nomor: i + 1 };
                 }
@@ -1834,16 +2187,16 @@
                         (idx + 1) + '.' +
                     '</td>' +
                     '<td style="vertical-align: top; padding: 6px;">' +
-                        '<textarea class="form-control inp-pembahasan" rows="3" placeholder="Poin / pokok pembahasan..." style="font-size: 0.86rem; resize: vertical; line-height: 1.4;">' + escapeHtml(row.pembahasan || '') + '</textarea>' +
+                        '<div class="form-control rich-editor inp-pembahasan" contenteditable="true" data-placeholder="Poin / pokok pembahasan...">' + prepareEditorHtml(row.pembahasan || '') + '</div>' +
                     '</td>' +
                     '<td style="vertical-align: top; padding: 6px;">' +
-                        '<textarea class="form-control inp-deskripsi" rows="3" placeholder="Deskripsi pembahasan..." style="font-size: 0.86rem; resize: vertical; line-height: 1.4;">' + escapeHtml(row.deskripsi || '') + '</textarea>' +
+                        '<div class="form-control rich-editor inp-deskripsi" contenteditable="true" data-placeholder="Deskripsi pembahasan...">' + prepareEditorHtml(row.deskripsi || '') + '</div>' +
                     '</td>' +
                     '<td style="vertical-align: top; padding: 6px;">' +
-                        '<textarea class="form-control inp-hasil" rows="3" placeholder="Hasil pembahasan..." style="font-size: 0.86rem; resize: vertical; line-height: 1.4;">' + escapeHtml(row.hasil || '') + '</textarea>' +
+                        '<div class="form-control rich-editor inp-hasil" contenteditable="true" data-placeholder="Hasil pembahasan...">' + prepareEditorHtml(row.hasil || '') + '</div>' +
                     '</td>' +
                     '<td style="vertical-align: top; padding: 6px;">' +
-                        '<textarea class="form-control inp-tindaklanjut" rows="3" placeholder="Tindak lanjut top management..." style="font-size: 0.86rem; resize: vertical; line-height: 1.4;">' + escapeHtml(row.tindakLanjut || '') + '</textarea>' +
+                        '<div class="form-control rich-editor inp-tindaklanjut" contenteditable="true" data-placeholder="Tindak lanjut top management...">' + prepareEditorHtml(row.tindakLanjut || '') + '</div>' +
                     '</td>' +
                     '<td style="text-align: center; vertical-align: top; padding: 10px 4px;">' +
                         '<button type="button" class="btn-icon btn-icon-danger btn-del-pembahasan-row" data-row-idx="' + idx + '" data-is-edit="' + (isEdit ? 'true' : 'false') + '" title="Hapus baris ini">' +
@@ -1853,9 +2206,36 @@
                 '</tr>';
             }).join('');
 
-            var textareas = tbody.querySelectorAll('textarea');
-            for (var t = 0; t < textareas.length; t++) {
-                textareas[t].addEventListener('input', function () {
+            var editors = tbody.querySelectorAll('.rich-editor');
+            for (var t = 0; t < editors.length; t++) {
+                var ed = editors[t];
+                updateEditorEmptyState(ed);
+
+                ed.addEventListener('focus', function (e) {
+                    lastActiveRichEditor = e.currentTarget;
+                    saveCurrentSelection();
+                });
+
+                ed.addEventListener('keyup', function (e) {
+                    saveCurrentSelection();
+                    updateEditorEmptyState(e.currentTarget);
+                });
+
+                ed.addEventListener('mouseup', function (e) {
+                    saveCurrentSelection();
+                });
+
+                ed.addEventListener('input', function (e) {
+                    updateEditorEmptyState(e.currentTarget);
+                    syncPembahasanDraftFromDom(tbodyId, isEdit);
+                });
+
+                ed.addEventListener('blur', function (e) {
+                    updateEditorEmptyState(e.currentTarget);
+                    syncPembahasanDraftFromDom(tbodyId, isEdit);
+                });
+
+                attachRichPasteHandler(ed, function () {
                     syncPembahasanDraftFromDom(tbodyId, isEdit);
                 });
             }
@@ -1909,12 +2289,12 @@
             var list = [];
             for (var i = 0; i < rows.length; i++) {
                 var tr = rows[i];
-                var p = (tr.querySelector('.inp-pembahasan') || {}).value || '';
-                var d = (tr.querySelector('.inp-deskripsi') || {}).value || '';
-                var h = (tr.querySelector('.inp-hasil') || {}).value || '';
-                var tl = (tr.querySelector('.inp-tindaklanjut') || {}).value || '';
+                var p = getEditorHtml(tr.querySelector('.inp-pembahasan'));
+                var d = getEditorHtml(tr.querySelector('.inp-deskripsi'));
+                var h = getEditorHtml(tr.querySelector('.inp-hasil'));
+                var tl = getEditorHtml(tr.querySelector('.inp-tindaklanjut'));
 
-                if (p.trim() || d.trim() || h.trim() || tl.trim()) {
+                if (stripHtml(p).trim() || stripHtml(d).trim() || stripHtml(h).trim() || stripHtml(tl).trim()) {
                     list.push({
                         nomor: list.length + 1,
                         pembahasan: p.trim(),
@@ -2197,7 +2577,7 @@
             // Reset manual fields
             document.getElementById('hariTanggal').value = getTodayLongDayDateIndo();
             document.getElementById('agenda').value = '';
-            document.getElementById('waktu').value = '15.00 â€“ 17.00 WIB';
+            document.getElementById('waktu').value = '15.00 - 17.00 WIB';
             document.getElementById('lokasi').value = 'Training Room site Semarang';
             document.getElementById('pemimpinRapat').value = 'Erya Sari Dewi (Head of Site)';
             document.getElementById('notulen').value = 'Hanifa Ilma Pramuyuana (Administrasi)';
@@ -2277,19 +2657,19 @@
             } else {
                 for (var i = 0; i < data.pembahasanList.length; i++) {
                     var row = data.pembahasanList[i];
-                    if (!row.pembahasan) {
+                    if (!stripHtml(row.pembahasan)) {
                         errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Pembahasan tidak boleh kosong.' });
                         break;
                     }
-                    if (!row.deskripsi) {
+                    if (!stripHtml(row.deskripsi)) {
                         errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Deskripsi tidak boleh kosong.' });
                         break;
                     }
-                    if (!row.hasil) {
+                    if (!stripHtml(row.hasil)) {
                         errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Hasil tidak boleh kosong.' });
                         break;
                     }
-                    if (!row.tindakLanjut) {
+                    if (!stripHtml(row.tindakLanjut)) {
                         errors.push({ fieldId: 'pembahasanTable', message: 'Baris ke-' + (i + 1) + ': Kolom Tindak Lanjut Top Management tidak boleh kosong.' });
                         break;
                     }
@@ -2418,10 +2798,10 @@
 
                     var pRows = normalizePembahasanList(item);
                     pRows.forEach(function (r) {
-                        if (r.deskripsi) descList.push(r.deskripsi);
-                        if (r.pembahasan) descList.push(r.pembahasan);
-                        if (r.hasil) descList.push(r.hasil);
-                        if (r.tindakLanjut) descList.push(r.tindakLanjut);
+                        if (r.deskripsi) descList.push(stripHtml(r.deskripsi));
+                        if (r.pembahasan) descList.push(stripHtml(r.pembahasan));
+                        if (r.hasil) descList.push(stripHtml(r.hasil));
+                        if (r.tindakLanjut) descList.push(stripHtml(r.tindakLanjut));
                     });
                     var deskripsiText = descList.join(' ').toLowerCase();
 
@@ -2521,15 +2901,15 @@
                 var deskripsiCellHtml = '';
                 if (pRows.length === 1) {
                     var desc = pRows[0].deskripsi || item.detailNotulensi || '-';
-                    deskripsiCellHtml = '<div style="line-height: 1.45; font-size: 0.88rem; color: var(--text-secondary); max-height: 85px; overflow-y: auto; white-space: pre-wrap;">' +
-                        escapeHtml(desc) +
+                    deskripsiCellHtml = '<div style="line-height: 1.45; font-size: 0.88rem; color: var(--text-secondary); max-height: 85px; overflow-y: auto;">' +
+                        renderCellRichContent(desc) +
                     '</div>';
                 } else if (pRows.length > 1) {
                     deskripsiCellHtml = '<div style="line-height: 1.45; font-size: 0.86rem; color: var(--text-secondary); max-height: 95px; overflow-y: auto;">' +
                         pRows.map(function(r, rIdx) {
                             return '<div style="margin-bottom: 4px;">' +
                                 '<span style="font-weight: 600; color: var(--primary);">' + (rIdx + 1) + '.</span> ' +
-                                escapeHtml(r.deskripsi || '-') +
+                                renderCellRichContent(r.deskripsi || '-') +
                             '</div>';
                         }).join('') +
                     '</div>';
@@ -3014,10 +3394,10 @@
                 rowsHtml = rows.map(function(r, idx) {
                     return '<tr>' +
                         '<td style="border: 1px solid #000000; padding: 6px 4px; text-align: center; vertical-align: top; font-weight: bold;">' + (r.nomor || (idx + 1)) + '.</td>' +
-                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; font-weight: bold; line-height: 1.4;">' + escapeHtml(r.pembahasan || '-') + '</td>' +
-                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; line-height: 1.4; text-align: justify; white-space: pre-wrap;">' + escapeHtml(r.deskripsi || '-') + '</td>' +
-                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; line-height: 1.4; white-space: pre-wrap;">' + escapeHtml(r.hasil || '-') + '</td>' +
-                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; line-height: 1.4; white-space: pre-wrap;">' + escapeHtml(r.tindakLanjut || '-') + '</td>' +
+                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; font-weight: bold; line-height: 1.4; word-break: break-word;">' + renderCellRichContent(r.pembahasan || '-') + '</td>' +
+                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; line-height: 1.4; text-align: justify; word-break: break-word;">' + renderCellRichContent(r.deskripsi || '-') + '</td>' +
+                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; line-height: 1.4; word-break: break-word;">' + renderCellRichContent(r.hasil || '-') + '</td>' +
+                        '<td style="border: 1px solid #000000; padding: 6px 8px; vertical-align: top; line-height: 1.4; word-break: break-word;">' + renderCellRichContent(r.tindakLanjut || '-') + '</td>' +
                     '</tr>';
                 }).join('');
             }
@@ -3316,7 +3696,7 @@
             }
             for (var p = 0; p < editPembahasan.length; p++) {
                 var er = editPembahasan[p];
-                if (!er.pembahasan || !er.deskripsi || !er.hasil || !er.tindakLanjut) {
+                if (!stripHtml(er.pembahasan) || !stripHtml(er.deskripsi) || !stripHtml(er.hasil) || !stripHtml(er.tindakLanjut)) {
                     showToast('Pastikan kolom Pembahasan, Deskripsi, Hasil, dan Tindak Lanjut Top Management pada baris ' + (p + 1) + ' terisi.', 'warning', 'Validasi Gagal');
                     return;
                 }
@@ -3509,6 +3889,9 @@
         // INITIALIZATION
         // ==================================================================
         function initApp() {
+            // Inisialisasi Rich Text Formatting Toolbars
+            setupRichTextToolbars();
+
             // Inisialisasi Kop Surat
             var kopJudulInp = document.getElementById('kopJudul');
             var kopSubJudulInp = document.getElementById('kopSubJudul');

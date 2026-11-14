@@ -2332,3 +2332,173 @@ html.is-authenticated #authGateOverlay {
     }
 }
 
+/* ==========================================================================
+   RICH TEXT TOOLBAR & CONTENTEDITABLE EDITORS (MoM Pembahasan Table)
+   Fitur: Bold, Italic, Underline, Rata Kiri/Tengah/Kanan/Justify, Warna Teks, Copy-Paste
+   ========================================================================== */
+.pembahasan-rich-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    background: #F8FAFC;
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    user-select: none;
+}
+
+.rich-tool-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.rich-tool-btn {
+    width: 32px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #334155;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.rich-tool-btn:hover {
+    background-color: #F1F5F9;
+    color: var(--primary);
+}
+
+.rich-tool-btn.active {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+.rich-color-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 3px 6px;
+}
+
+.rich-color-label {
+    font-size: 0.82rem;
+    color: #64748B;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 2px;
+}
+
+.rich-color-swatches {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rich-color-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid #FFFFFF;
+    box-shadow: 0 0 0 1px #CBD5E1;
+    cursor: pointer;
+    transition: transform 0.15s;
+    padding: 0;
+}
+
+.rich-color-dot:hover {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 1.5px var(--primary);
+}
+
+.rich-color-input-wrap {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #CBD5E1;
+}
+
+.rich-color-input {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+}
+
+.rich-toolbar-hint {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: #64748B;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+}
+
+.rich-toolbar-hint i {
+    color: var(--primary);
+}
+
+/* Rich Editor Cell */
+.rich-editor {
+    min-height: 85px;
+    max-height: 220px;
+    overflow-y: auto;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    padding: 8px 10px;
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    word-break: break-word;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    text-align: left;
+}
+
+.rich-editor:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(10, 102, 255, 0.15);
+}
+
+.rich-editor:empty::before,
+.rich-editor[data-empty="true"]::before {
+    content: attr(data-placeholder);
+    color: #94A3B8;
+    pointer-events: none;
+    display: block;
+    font-style: italic;
+}
+
+.rich-editor ul,
+.rich-editor ol {
+    padding-left: 20px;
+    margin: 4px 0;
+}
+
+.rich-editor p,
+.rich-editor div {
+    margin: 2px 0;
+}
+
