@@ -1291,15 +1291,15 @@
         var PRESET_PESERTA = DEFAULT_PRESET_PESERTA.slice();
         var PRESET_STORAGE_KEY = "TLNOTE_preset_peserta_cache";
 
-        // Konfigurasi resmi Firebase kabinnet12-d8305
+        // Konfigurasi resmi Firebase tlsmgnote
         var firebaseConfig = {
-            apiKey: "AIzaSyDl3wX5h-AM9vOg3qtePl6wAl2vNS_lN2Y",
-            authDomain: "kabinnet12-d8305.firebaseapp.com",
-            projectId: "kabinnet12-d8305",
-            storageBucket: "kabinnet12-d8305.firebasestorage.app",
-            messagingSenderId: "504059668634",
-            appId: "1:504059668634:web:d31810dff98697b9801723",
-            measurementId: "G-SCQ4HRKKW2"
+            apiKey: "AIzaSyAcnJaPN6bH8V6pyJ8oJEeWTHgsRE4VirI",
+            authDomain: "tlsmgnote.firebaseapp.com",
+            projectId: "tlsmgnote",
+            storageBucket: "tlsmgnote.firebasestorage.app",
+            messagingSenderId: "1050442012701",
+            appId: "1:1050442012701:web:33789dd5db05b448cfcef4",
+            measurementId: "G-9MSVX51HJV"
         };
 
         var LOCAL_STORAGE_KEY = "TLNOTE_notulensi_cache";
@@ -2663,7 +2663,9 @@
 
             try {
                 if (fbAuth && !fbAuth.currentUser) {
-                    await fbAuth.signInWithEmailAndPassword("admin@kabinnet.com", "Smg1234").catch(function(e) {});
+                    await fbAuth.signInWithEmailAndPassword("admin@kabinnet.com", "Smg1234").catch(function() {
+                        return fbAuth.signInAnonymously().catch(function() {});
+                    });
                 }
                 await fbDb.collection("app").doc("notulensiData").set({
                     jsonData: JSON.stringify(list),
@@ -4405,7 +4407,9 @@
                 var text = document.getElementById('statusText');
 
                 if (fbAuth) {
-                    fbAuth.signInWithEmailAndPassword("admin@kabinnet.com", "Smg1234").catch(function(e) {});
+                    fbAuth.signInWithEmailAndPassword("admin@kabinnet.com", "Smg1234").catch(function() {
+                        return fbAuth.signInAnonymously().catch(function() {});
+                    });
                 }
 
                 try {

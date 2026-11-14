@@ -3,15 +3,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-// Konfigurasi resmi Firebase Project kabinnet12-d8305
+// Konfigurasi resmi Firebase Project tlsmgnote
 const firebaseConfig = {
-    apiKey: "AIzaSyDl3wX5h-AM9vOg3qtePl6wAl2vNS_lN2Y",
-    authDomain: "kabinnet12-d8305.firebaseapp.com",
-    projectId: "kabinnet12-d8305",
-    storageBucket: "kabinnet12-d8305.firebasestorage.app",
-    messagingSenderId: "504059668634",
-    appId: "1:504059668634:web:d31810dff98697b9801723",
-    measurementId: "G-SCQ4HRKKW2"
+    apiKey: "AIzaSyAcnJaPN6bH8V6pyJ8oJEeWTHgsRE4VirI",
+    authDomain: "tlsmgnote.firebaseapp.com",
+    projectId: "tlsmgnote",
+    storageBucket: "tlsmgnote.firebasestorage.app",
+    messagingSenderId: "1050442012701",
+    appId: "1:1050442012701:web:33789dd5db05b448cfcef4",
+    measurementId: "G-9MSVX51HJV"
 };
 
 // Inisialisasi Firebase
