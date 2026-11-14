@@ -27,9 +27,116 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Early Navigation Handler -->
+    <!-- App Authentication Pre-check (Password: TLSMG123) -->
     <script>
+        const APP_AUTH_KEY = 'TLNOTE_AUTH_SESSION';
+        const APP_AUTH_PASS = 'TLSMG123';
+
+        function isAppAuthenticated() {
+            try {
+                return sessionStorage.getItem(APP_AUTH_KEY) === 'true' || localStorage.getItem(APP_AUTH_KEY) === 'true';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Apply authenticated class immediately if already authenticated to prevent flash
+        if (isAppAuthenticated()) {
+            document.documentElement.classList.add('is-authenticated');
+        }
+
+        function handleAuthSubmit(e) {
+            if (e) e.preventDefault();
+            var input = document.getElementById('authPasswordInput');
+            var errorMsg = document.getElementById('authErrorMsg');
+            var card = document.getElementById('authCard');
+            var remember = document.getElementById('authRememberMe');
+
+            if (!input) return;
+            var val = (input.value || '').trim();
+
+            if (val === APP_AUTH_PASS) {
+                if (errorMsg) errorMsg.style.display = 'none';
+                try {
+                    sessionStorage.setItem(APP_AUTH_KEY, 'true');
+                    if (remember && remember.checked) {
+                        localStorage.setItem(APP_AUTH_KEY, 'true');
+                    } else {
+                        localStorage.removeItem(APP_AUTH_KEY);
+                    }
+                } catch (err) {}
+
+                document.documentElement.classList.add('is-authenticated');
+                var overlay = document.getElementById('authGateOverlay');
+                if (overlay) overlay.classList.add('hidden');
+
+                // Route to appropriate view
+                var initialHash = window.location.hash || '#dashboard';
+                if (initialHash === '#create') navigateTo('createView');
+                else if (initialHash === '#history') navigateTo('historyView');
+                else navigateTo('dashboardView');
+            } else {
+                if (errorMsg) errorMsg.style.display = 'flex';
+                if (card) {
+                    card.classList.remove('shake');
+                    void card.offsetWidth; // trigger reflow
+                    card.classList.add('shake');
+                }
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function handleLockApp() {
+            try {
+                sessionStorage.removeItem(APP_AUTH_KEY);
+                localStorage.removeItem(APP_AUTH_KEY);
+            } catch (e) {}
+
+            document.documentElement.classList.remove('is-authenticated');
+            var overlay = document.getElementById('authGateOverlay');
+            var input = document.getElementById('authPasswordInput');
+            var errorMsg = document.getElementById('authErrorMsg');
+
+            if (errorMsg) errorMsg.style.display = 'none';
+            if (input) input.value = '';
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                setTimeout(function() {
+                    if (input) input.focus();
+                }, 100);
+            }
+        }
+
+        function toggleAuthPasswordVisibility() {
+            var input = document.getElementById('authPasswordInput');
+            var icon = document.getElementById('authEyeIcon');
+            if (!input || !icon) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isAppAuthenticated()) {
+                var input = document.getElementById('authPasswordInput');
+                if (input) input.focus();
+            }
+        });
+
         function navigateTo(viewId) {
+            if (!isAppAuthenticated()) {
+                var overlay = document.getElementById('authGateOverlay');
+                if (overlay) overlay.classList.remove('hidden');
+                var input = document.getElementById('authPasswordInput');
+                if (input) input.focus();
+                return;
+            }
+
             var targetId = viewId;
             if (viewId === 'dashboard') targetId = 'dashboardView';
             else if (viewId === 'create') targetId = 'createView';
@@ -69,6 +176,56 @@
     </script>
 </head>
 <body>
+
+    <!-- ====================================================================
+         AUTHENTICATION GATE OVERLAY (Password Protected: TLSMG123)
+         ==================================================================== -->
+    <div id="authGateOverlay" class="auth-gate-overlay">
+        <div class="auth-card" id="authCard">
+            <div class="auth-logo-badge">
+                <img src="favicon.png" alt="NT Logo" class="auth-logo-img">
+            </div>
+            <h2 class="auth-title">Minutes of Meeting</h2>
+            <p class="auth-subtitle">Akses Terproteksi ICONNET Semarang<br>Masukkan kata sandi untuk melanjutkan</p>
+
+            <form id="authGateForm" class="auth-form" onsubmit="handleAuthSubmit(event); return false;">
+                <div class="auth-field-wrap">
+                    <label for="authPasswordInput" class="auth-label">
+                        <i class="fa-solid fa-key"></i> Kata Sandi
+                    </label>
+                    <div class="auth-input-group">
+                        <i class="fa-solid fa-lock auth-icon-left"></i>
+                        <input type="password" id="authPasswordInput" class="auth-input" placeholder="Masukkan kata sandi..." autocomplete="current-password" required autofocus>
+                        <button type="button" class="auth-toggle-pwd" id="authTogglePwdBtn" title="Tampilkan/Sembunyikan Kata Sandi" onclick="toggleAuthPasswordVisibility()">
+                            <i class="fa-solid fa-eye" id="authEyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="authErrorMsg" class="auth-error-alert" style="display: none;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span>Kata sandi salah! Silakan coba lagi.</span>
+                </div>
+
+                <div class="auth-options">
+                    <label class="auth-checkbox-label">
+                        <input type="checkbox" id="authRememberMe" checked>
+                        <span>Ingat di perangkat ini</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-auth-submit" id="btnAuthSubmit">
+                    <i class="fa-solid fa-unlock-keyhole"></i>
+                    <span>Buka Aplikasi</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>TL SMG Secured Portal</span>
+            </div>
+        </div>
+    </div>
 
     <!-- ====================================================================
          TOP NAVIGATION BAR
@@ -112,6 +269,12 @@
                     <span class="status-dot online" id="statusDot"></span>
                     <span id="statusText">Firestore Terhubung</span>
                 </div>
+
+                <!-- Lock App Button -->
+                <button type="button" class="btn-nav-lock" id="btnNavLock" title="Kunci Aplikasi" onclick="handleLockApp()">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Kunci</span>
+                </button>
 
                 <!-- Mobile Menu Button -->
                 <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu Navigasi">
