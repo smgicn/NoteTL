@@ -2019,7 +2019,7 @@ mark.search-match.search-match-next {
 }
 
 /* ==========================================================================
-   AUTHENTICATION GATE & LOCK SCREEN (Password Protected: TLSMG123)
+   AUTHENTICATION GATE & LOCK SCREEN (Firebase Auth Protected)
    ========================================================================== */
 html.is-authenticated #authGateOverlay {
     display: none !important;

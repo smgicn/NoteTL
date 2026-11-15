@@ -1,7 +1,7 @@
 // Firebase Configuration & Service Layer
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 // Konfigurasi resmi Firebase Project tlsmgnote
 const firebaseConfig = {
@@ -26,22 +26,15 @@ let isOnline = navigator.onLine;
 let authReady = false;
 let pendingSave = null;
 
-// Silent admin authentication untuk write access ke Firestore
+// Auth verification untuk Firebase Authentication
 async function ensureAuth() {
     return new Promise((resolve) => {
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 authReady = true;
                 resolve(user);
             } else {
-                try {
-                    const cred = await signInWithEmailAndPassword(auth, "admin@kabinnet.com", "Smg1234");
-                    authReady = true;
-                    resolve(cred.user);
-                } catch (err) {
-                    console.warn("Silent auth fallback or failed:", err);
-                    resolve(null);
-                }
+                resolve(null);
             }
         });
     });
@@ -137,19 +130,7 @@ export async function saveNotulensiListToFirebase(list) {
         return { success: true };
     } catch (error) {
         console.error("Error saving to Firebase:", error);
-        // Jika gagal karena auth, coba re-auth sekali
-        try {
-            await signInWithEmailAndPassword(auth, "admin@kabinnet.com", "Smg1234");
-            await setDoc(APP_DOC_REF, {
-                jsonData: JSON.stringify(list),
-                totalRecords: list.length,
-                updatedAt: Date.now()
-            }, { merge: true });
-            return { success: true };
-        } catch (retryErr) {
-            console.error("Retry failed:", retryErr);
-            throw new Error("Gagal menyimpan ke Firestore: " + (retryErr.message || error.message));
-        }
+        throw new Error("Gagal menyimpan ke Firestore: " + (error.message || "Unknown error"));
     }
 }
 
