@@ -85,7 +85,7 @@
             if (badge && text) {
                 if (email) {
                     text.textContent = email;
-                    badge.style.display = 'inline-flex';
+                    badge.style.display = 'flex';
                 } else {
                     badge.style.display = 'none';
                 }
@@ -286,6 +286,15 @@
             if (activeLink) {
                 activeLink.classList.add('active');
             }
+            var dLinks = document.querySelectorAll('.dropdown-nav-link');
+            for (var k = 0; k < dLinks.length; k++) {
+                dLinks[k].classList.remove('active');
+            }
+            var activeDLink = document.querySelector('.dropdown-nav-link[data-view="' + targetId + '"]');
+            if (activeDLink) {
+                activeDLink.classList.add('active');
+            }
+            if (typeof closeUserDropdown === 'function') closeUserDropdown();
 
             var navMenu = document.getElementById('navMenu');
             if (navMenu) navMenu.classList.remove('open');
@@ -297,6 +306,52 @@
                 window.applySearchAndFilters();
             }
         }
+        function toggleUserDropdown(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            var menu = document.getElementById('navDropdownMenu');
+            var btn = document.getElementById('btnNavMenuToggle');
+            if (!menu) return;
+            var isOpen = menu.classList.toggle('show');
+            if (btn) {
+                btn.classList.toggle('active', isOpen);
+                btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            }
+        }
+
+        function closeUserDropdown() {
+            var menu = document.getElementById('navDropdownMenu');
+            var btn = document.getElementById('btnNavMenuToggle');
+            if (menu) menu.classList.remove('show');
+            if (btn) {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function setDatabaseStatus(statusClass, statusLabel) {
+            var dot = document.getElementById('statusDot');
+            var text = document.getElementById('statusText');
+            var miniDot = document.getElementById('statusDotMini');
+            if (dot) dot.className = 'status-dot ' + statusClass;
+            if (miniDot) miniDot.className = 'nav-toggle-badge-dot status-dot ' + statusClass;
+            if (text) text.textContent = statusLabel;
+        }
+
+        document.addEventListener('click', function (e) {
+            var wrapper = document.getElementById('navUserDropdownWrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                closeUserDropdown();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeUserDropdown();
+            }
+        });
     </script>
 </head>
 <body>
@@ -370,51 +425,83 @@
                 </div>
             </a>
 
-            <!-- Navigation Links -->
+            <!-- Navigation Links (Tanpa Logo/Ikon sesuai permintaan) -->
             <ul class="nav-menu" id="navMenu">
                 <li>
                     <a href="#dashboard" class="nav-link active" data-view="dashboardView" onclick="navigateTo('dashboardView'); return false;">
-                        <i class="fa-solid fa-chart-pie"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
                     <a href="#create" class="nav-link" data-view="createView" onclick="navigateTo('createView'); return false;">
-                        <i class="fa-solid fa-file-circle-plus"></i>
                         <span>Buat Notulensi</span>
                     </a>
                 </li>
                 <li>
                     <a href="#history" class="nav-link" data-view="historyView" onclick="navigateTo('historyView'); return false;">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Riwayat Notulensi</span>
                     </a>
                 </li>
             </ul>
 
             <div class="nav-actions">
-                <!-- Real-time Firebase Connection Indicator -->
-                <div class="connection-status" id="connectionStatusBadge" title="Status Sinkronisasi Firebase Firestore">
-                    <span class="status-dot online" id="statusDot"></span>
-                    <span id="statusText">Firestore Terhubung</span>
+                <!-- Dropdown Menu / Garis Tiga (Status, Akun & Keluar Disatukan) -->
+                <div class="nav-menu-dropdown-wrapper" id="navUserDropdownWrapper">
+                    <button type="button" class="btn-nav-menu-toggle" id="btnNavMenuToggle" aria-label="Menu Akun & Sistem" title="Status Sistem & Pengaturan Akun" onclick="toggleUserDropdown(event)">
+                        <i class="fa-solid fa-bars"></i>
+                        <span class="nav-toggle-badge-dot status-dot online" id="statusDotMini" title="Status Sistem"></span>
+                    </button>
+
+                    <div class="nav-dropdown-menu" id="navDropdownMenu">
+                        <!-- Navigation Links khusus tampilan mobile (<= 768px) -->
+                        <div class="dropdown-mobile-nav">
+                            <span class="dropdown-section-title">Navigasi Halaman</span>
+                            <a href="#dashboard" class="dropdown-nav-link active" data-view="dashboardView" onclick="navigateTo('dashboardView'); closeUserDropdown(); return false;">
+                                <i class="fa-solid fa-chart-pie"></i>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="#create" class="dropdown-nav-link" data-view="createView" onclick="navigateTo('createView'); closeUserDropdown(); return false;">
+                                <i class="fa-solid fa-file-circle-plus"></i>
+                                <span>Buat Notulensi</span>
+                            </a>
+                            <a href="#history" class="dropdown-nav-link" data-view="historyView" onclick="navigateTo('historyView'); closeUserDropdown(); return false;">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <span>Riwayat Notulensi</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                        </div>
+
+                        <!-- User Info Item -->
+                        <div class="dropdown-item-user" id="navUserBadge" style="display: none;">
+                            <div class="dropdown-user-avatar">
+                                <i class="fa-solid fa-circle-user"></i>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <span class="dropdown-user-label">Pengguna Terhubung</span>
+                                <span class="dropdown-user-email" id="navUserEmailText">-</span>
+                            </div>
+                        </div>
+
+                        <div class="dropdown-divider"></div>
+
+                        <!-- Real-time Database / Connection Status Item -->
+                        <div class="dropdown-item-status" id="connectionStatusBadge" title="Status Sinkronisasi Firebase Firestore">
+                            <span class="status-dot online" id="statusDot"></span>
+                            <div class="dropdown-status-info">
+                                <span class="dropdown-status-label">Status Database</span>
+                                <span class="dropdown-status-val" id="statusText">Firestore Terhubung</span>
+                            </div>
+                        </div>
+
+                        <div class="dropdown-divider"></div>
+
+                        <!-- Lock/Logout App Button -->
+                        <button type="button" class="dropdown-item-action btn-dropdown-logout" id="btnNavLock" title="Keluar / Kunci Aplikasi" onclick="handleLockApp(); closeUserDropdown();">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Keluar</span>
+                        </button>
+                    </div>
                 </div>
-
-                <!-- User Info Badge -->
-                <div class="nav-user-badge" id="navUserBadge" style="display: none; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-secondary); background: #F1F5F9; padding: 4px 10px; border-radius: 20px; border: 1px solid #E2E8F0;">
-                    <i class="fa-solid fa-circle-user" style="color: var(--primary);"></i>
-                    <span id="navUserEmailText" style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">-</span>
-                </div>
-
-                <!-- Lock/Logout App Button -->
-                <button type="button" class="btn-nav-lock" id="btnNavLock" title="Keluar / Kunci Aplikasi" onclick="handleLockApp()">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Keluar</span>
-                </button>
-
-                <!-- Mobile Menu Button -->
-                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu Navigasi">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
             </div>
         </div>
     </header>
@@ -4602,8 +4689,8 @@
                             state.notulensiList = list;
                             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
 
-                            if (dot) dot.className = 'status-dot online';
-                            if (text) text.textContent = 'Firestore Terhubung';
+                            setDatabaseStatus('online', 'Firestore Terhubung');
+
 
                             window.updateDashboardKPIs();
                             window.renderRecentTable();
@@ -4635,16 +4722,16 @@
                                         });
                                     }
                                 }
-                                if (dot) dot.className = 'status-dot online';
-                                if (text) text.textContent = 'Firestore Terhubung';
+                            setDatabaseStatus('online', 'Firestore Terhubung');
+
 
                                 window.updateDashboardKPIs();
                                 window.renderRecentTable();
                                 window.applySearchAndFilters();
                             }).catch(function (legErr) {
                                 console.warn("Legacy check notice:", legErr);
-                                if (dot) dot.className = 'status-dot online';
-                                if (text) text.textContent = 'Firestore Aktif';
+                            setDatabaseStatus('online', 'Firestore Aktif');
+
                             });
                         }
                     }, function (err) {
@@ -4663,8 +4750,8 @@
                                 state.notulensiList = list;
                                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
 
-                                if (dot) dot.className = 'status-dot online';
-                                if (text) text.textContent = 'Firestore Terhubung';
+                            setDatabaseStatus('online', 'Firestore Terhubung');
+
 
                                 window.updateDashboardKPIs();
                                 window.renderRecentTable();
@@ -4672,8 +4759,8 @@
                             }
                         }, function (fbErr) {
                             console.warn("Snapshot fallback notice:", fbErr);
-                            if (dot) dot.className = 'status-dot online';
-                            if (text) text.textContent = 'Penyimpanan Lokal Aktif';
+                            setDatabaseStatus('offline', 'Penyimpanan Lokal Aktif');
+
                         });
                     });
                 } catch (e) {
