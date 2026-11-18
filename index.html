@@ -2229,22 +2229,26 @@
         function syncPembahasanDraftFromDom(tbodyId, isEdit) {
             var tbody = document.getElementById(tbodyId);
             if (!tbody) return;
-            var rows = tbody.querySelectorAll('[data-row-idx]');
-            var draft = isEdit ? state.editPembahasanDraft : state.pembahasanDraft;
+            var rows = tbody.querySelectorAll('.pembahasan-row-card');
+            var newList = [];
             for (var i = 0; i < rows.length; i++) {
                 var card = rows[i];
                 var p = getEditorHtml(card.querySelector('.inp-pembahasan'));
                 var d = getEditorHtml(card.querySelector('.inp-deskripsi'));
                 var h = getEditorHtml(card.querySelector('.inp-hasil'));
                 var tl = getEditorHtml(card.querySelector('.inp-tindaklanjut'));
-                if (!draft[i]) {
-                    draft[i] = { nomor: i + 1 };
-                }
-                draft[i].nomor = i + 1;
-                draft[i].pembahasan = p;
-                draft[i].deskripsi = d;
-                draft[i].hasil = h;
-                draft[i].tindakLanjut = tl;
+                newList.push({
+                    nomor: i + 1,
+                    pembahasan: p,
+                    deskripsi: d,
+                    hasil: h,
+                    tindakLanjut: tl
+                });
+            }
+            if (isEdit) {
+                state.editPembahasanDraft = newList;
+            } else {
+                state.pembahasanDraft = newList;
             }
         }
 
@@ -2272,7 +2276,7 @@
                             '<span>Poin Pembahasan #' + itemNo + '</span>' +
                         '</div>' +
                         '<div class="pembahasan-row-card-actions">' +
-                            '<button type="button" class="btn btn-sm btn-outline-danger btn-del-pembahasan-row" data-row-idx="' + idx + '" data-is-edit="' + (isEdit ? 'true' : 'false') + '" title="Hapus baris poin pembahasan ini" style="padding: 4px 10px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">' +
+                            '<button type="button" class="btn btn-sm btn-outline-danger btn-del-pembahasan-row" data-del-idx="' + idx + '" data-is-edit="' + (isEdit ? 'true' : 'false') + '" title="Hapus baris poin pembahasan ini" style="padding: 4px 10px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">' +
                                 '<i class="fa-solid fa-trash-can"></i> <span>Hapus Baris</span>' +
                             '</button>' +
                         '</div>' +
@@ -2358,8 +2362,11 @@
             var delBtns = tbody.querySelectorAll('.btn-del-pembahasan-row');
             for (var d = 0; d < delBtns.length; d++) {
                 delBtns[d].addEventListener('click', function (e) {
-                    var rIdx = parseInt(e.currentTarget.getAttribute('data-row-idx'), 10);
-                    var forEdit = e.currentTarget.getAttribute('data-is-edit') === 'true';
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var btn = e.target.closest('.btn-del-pembahasan-row') || e.currentTarget;
+                    var rIdx = parseInt(btn.getAttribute('data-del-idx'), 10);
+                    var forEdit = btn.getAttribute('data-is-edit') === 'true';
                     deletePembahasanRow(rIdx, forEdit);
                 });
             }
@@ -2379,6 +2386,21 @@
                 tindakLanjut: ''
             });
             renderPembahasanTable(tbodyId, badgeId, draft, isEdit);
+
+            setTimeout(function () {
+                var tbody = document.getElementById(tbodyId);
+                if (tbody) {
+                    var allCards = tbody.querySelectorAll('.pembahasan-row-card');
+                    if (allCards.length > 0) {
+                        var lastCard = allCards[allCards.length - 1];
+                        var firstInp = lastCard.querySelector('.inp-pembahasan');
+                        if (firstInp) {
+                            firstInp.focus();
+                            lastCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                }
+            }, 60);
         }
 
         function deletePembahasanRow(rowIdx, isEdit) {
@@ -2391,8 +2413,11 @@
                 draft[0] = { nomor: 1, pembahasan: '', deskripsi: '', hasil: '', tindakLanjut: '' };
                 showToast('Baris pembahasan telah dikosongkan.', 'info');
             } else {
-                draft.splice(rowIdx, 1);
+                if (rowIdx >= 0 && rowIdx < draft.length) {
+                    draft.splice(rowIdx, 1);
+                }
                 draft.forEach(function (r, i) { r.nomor = i + 1; });
+                showToast('Baris pembahasan berhasil dihapus.', 'info');
             }
             renderPembahasanTable(tbodyId, badgeId, draft, isEdit);
         }
@@ -2400,7 +2425,7 @@
         function getPembahasanFromTable(tbodyId) {
             var tbody = document.getElementById(tbodyId);
             if (!tbody) return [];
-            var rows = tbody.querySelectorAll('[data-row-idx]');
+            var rows = tbody.querySelectorAll('.pembahasan-row-card');
             var list = [];
             for (var i = 0; i < rows.length; i++) {
                 var card = rows[i];
@@ -4223,13 +4248,13 @@
             // Pembahasan Dynamic Rows Event Listeners
             var btnAddRow = document.getElementById('btnAddPembahasanRow');
             var btnAddRowBottom = document.getElementById('btnAddPembahasanRowBottom');
-            if (btnAddRow) btnAddRow.addEventListener('click', function () { addPembahasanRow(false); });
-            if (btnAddRowBottom) btnAddRowBottom.addEventListener('click', function () { addPembahasanRow(false); });
+            if (btnAddRow) btnAddRow.addEventListener('click', function (e) { e.preventDefault(); addPembahasanRow(false); });
+            if (btnAddRowBottom) btnAddRowBottom.addEventListener('click', function (e) { e.preventDefault(); addPembahasanRow(false); });
 
             var btnEditAddRow = document.getElementById('btnEditAddPembahasanRow');
             var btnEditAddRowBottom = document.getElementById('btnEditAddPembahasanRowBottom');
-            if (btnEditAddRow) btnEditAddRow.addEventListener('click', function () { addPembahasanRow(true); });
-            if (btnEditAddRowBottom) btnEditAddRowBottom.addEventListener('click', function () { addPembahasanRow(true); });
+            if (btnEditAddRow) btnEditAddRow.addEventListener('click', function (e) { e.preventDefault(); addPembahasanRow(true); });
+            if (btnEditAddRowBottom) btnEditAddRowBottom.addEventListener('click', function (e) { e.preventDefault(); addPembahasanRow(true); });
 
             // Inisialisasi awal tabel pembahasan pada form utama
             state.pembahasanDraft = [{ nomor: 1, pembahasan: '', deskripsi: '', hasil: '', tindakLanjut: '' }];
